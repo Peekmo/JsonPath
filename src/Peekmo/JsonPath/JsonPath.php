@@ -21,6 +21,10 @@ class JsonPath
 
     public function jsonPath($obj, $expr, $args=null) 
     {
+        if (is_object($obj)) {
+            $obj = get_object_vars($obj);
+        }
+
         $this->resultType = ($args ? $args['resultType'] : "VALUE");
         $x = $this->normalize($expr);
 
@@ -150,10 +154,7 @@ class JsonPath
     private function evalx($x, $v, $vname) 
     {
         $name = "";
-        $o = (object)'';
-        foreach ($v as $key => $value) {
-            $o->$key = $value;
-        }
+        $o = array_map(__FUNCTION__, $v);
 
         $expr = preg_replace(array("/\\$/","/@/"), array("\$this->obj","\$o"), $x);
         $expr = preg_replace("#\.#", "->", $expr);
