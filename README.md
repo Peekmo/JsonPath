@@ -51,6 +51,7 @@ Consider this json :
 - Transform your json into **array** (it works with object, but use an array for better performances)
 - You can get values like this :
 
+``` php
     <?php
     
     require_once __DIR__ . '/vendor/autoload.php'; // Autoload files using Composer autoload
@@ -66,11 +67,13 @@ Consider this json :
     $res = $store->get($o, "$..book[?(@.isbn)].category");
 
     ?>
+'''
 
 It returns an array, you can so use default [functions](http://php.net/manual/fr/ref.array.php) on the result (Have unique key for example)
 
 - You can change a value like this :
 
+``` php
     <?php
     
     require_once __DIR__ . '/vendor/autoload.php'; // Autoload files using Composer autoload
@@ -88,11 +91,13 @@ It returns an array, you can so use default [functions](http://php.net/manual/fr
     echo json_encode($o);
 
     ?>
+'''
 
 The value is passed by reference, so, when you are using a set, your object "$o" is modified.
 
 - You can add a value like this :
 
+``` php
     <?php
     
     require_once __DIR__ . '/vendor/autoload.php'; // Autoload files using Composer autoload
@@ -110,11 +115,13 @@ The value is passed by reference, so, when you are using a set, your object "$o"
     echo json_encode($o);
 
     ?>
+'''
 
 The parameter "key" is optional, a number will be set if you're not providing one.
 
 - You can remove an attribute like this :
 
+``` php
     <?php
     
     require_once __DIR__ . '/vendor/autoload.php'; // Autoload files using Composer autoload
@@ -132,6 +139,7 @@ The parameter "key" is optional, a number will be set if you're not providing on
     echo json_encode($o);
 
     ?>
+'''
 
 Removes the attribute "category" from all books
 
