@@ -133,15 +133,13 @@ The parameter "key" is optional, a number will be set if you're not providing on
 
     $store = new JsonStore();
 
-    // Add a new value in first book's array "key":"value"
-    $store->remove($o, "$..book.category");
+    // Removes the attribute "category" from all books
+    $store->remove($o, "$..book.*.category");
 
     echo json_encode($o);
 
     ?>
 ```
-
-Removes the attribute "category" from all books
 
 ## Thanks ##
 

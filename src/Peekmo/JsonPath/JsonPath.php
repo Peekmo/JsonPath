@@ -22,7 +22,7 @@ class JsonPath
     public function jsonPath($obj, $expr, $args=null) 
     {
         if (is_object($obj)) {
-            $obj = get_object_vars($obj);
+            throw new \Exception('You sent an object, not an array.');
         }
 
         $this->resultType = ($args ? $args['resultType'] : "VALUE");
@@ -154,7 +154,7 @@ class JsonPath
     private function evalx($x, $v, $vname) 
     {
         $name = "";
-        $o = array_map(__FUNCTION__, $v);
+        $o = $this->toObject($v);
 
         $expr = preg_replace(array("/\\$/","/@/"), array("\$this->obj","\$o"), $x);
         $expr = preg_replace("#\.#", "->", $expr);
@@ -165,6 +165,21 @@ class JsonPath
         } else {
             return $name;
         }
+    }
+
+    private function toObject($array)
+    {
+        $o = (object)'';
+
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $value = $this->toObject($value);
+            }
+
+            $o->$key = $value;
+        }
+
+        return $o;
     }
 }
 ?>
