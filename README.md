@@ -7,6 +7,20 @@ JsonPath utility (XPath for JSON) for PHP based on **Stefan Goessner's** impleme
 
 What is JsonPath ? What is the syntax ? Take a look to [Stefan Goessner's documentation](http://goessner.net/articles/JsonPath/)
 
+## Installation ##
+
+- That's simple ! Add this to your composer.json :
+
+    "require": {
+        "peekmo/jsonpath": "dev-master"
+    }
+
+You just have to require the vendor/autoload.php (if not already) and add the following use :
+
+``` php
+    use Peekmo\JsonPath\JsonStore;
+```
+
 ## How it works ? ##
 
 Consider this json :
