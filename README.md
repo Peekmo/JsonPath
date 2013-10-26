@@ -11,9 +11,11 @@ What is JsonPath ? What is the syntax ? Take a look to [Stefan Goessner's docume
 
 - That's simple ! Add this to your composer.json :
 
+```
     "require": {
         "peekmo/jsonpath": "dev-master"
     }
+```
 
 You just have to require the vendor/autoload.php (if not already) and add the following use :
 
