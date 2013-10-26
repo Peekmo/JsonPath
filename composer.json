@@ -9,10 +9,10 @@
         {"name": "Axel Anceau", "email": "axel.anceau@gmail.com"}
     ],
     "autoload": {
-        "psr-0": {"\\Peekmo\\JsonPath": "src/"}
+        "psr-0": {"Peekmo\\JsonPath": "src/"}
     },
     "require": {
-        "php": ">=5.2"
+        "php": ">=5.3.3"
     },
     "minimum-stability": "dev"
 }
