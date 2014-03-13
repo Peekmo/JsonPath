@@ -1,5 +1,6 @@
 JsonPath
 ========
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Peekmo/jsonpath/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 JsonPath utility (XPath for JSON) for PHP based on **Stefan Goessner's** implementation : http://code.google.com/p/jsonpath/
 
