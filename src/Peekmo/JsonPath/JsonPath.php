@@ -151,7 +151,7 @@ class JsonPath
     * @param string $x filter
     * @param array  $v node
     * */
-    private function evalx($x, $v, $vname) 
+    private function evalx($x, $v, $vname=null) 
     {
         $name = "";
         $o = $this->toObject($v);
@@ -169,7 +169,8 @@ class JsonPath
 
     private function toObject($array)
     {
-        $o = (object)'';
+        //$o = (object)'';
+        $o = new stdClass();
 
         foreach ($array as $key => $value) {
             if (is_array($value)) {
