@@ -170,7 +170,7 @@ class JsonPath
     private function toObject($array)
     {
         //$o = (object)'';
-        $o = new stdClass();
+        $o = new \stdClass();
 
         foreach ($array as $key => $value) {
             if (is_array($value)) {
