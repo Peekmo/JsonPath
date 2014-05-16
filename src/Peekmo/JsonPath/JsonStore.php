@@ -53,7 +53,11 @@ class JsonStore
             foreach ($res as &$r) {
                 $r = $value;
             }
+
+          return true;
         }
+
+      return false;
     }
 
     function add(&$obj, $parentexpr, $value, $name="")
@@ -68,7 +72,11 @@ class JsonStore
                 $parent[] = $value;
             }
         }
+
+        return true;
       }
+
+      return false;
     }
 
     function remove(&$obj, $expr)
