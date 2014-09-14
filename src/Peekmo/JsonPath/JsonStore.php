@@ -14,79 +14,165 @@ class JsonStore
 {
     private static $emptyArray = array();
 
-    function toString($obj)
+    /**
+     * @var array
+     */
+    private $data;
+
+    /**
+     * @var JsonPath
+     */
+    private $jsonPath;
+
+    /**
+     * @param string|array|\stdClass $data
+     */
+    public function __construct($data)
     {
-        return json_encode($obj);
+        $this->jsonPath = new JsonPath();
+        $this->setData($data);
     }
 
-    function asObj($jsonstr)
+    /**
+     * Sets JsonStore's manipulated data
+     * @param string|array|\stdClass $data
+     */
+    public function setData($data)
     {
-        return json_decode($jsonstr);
+        $this->data = $data;
+
+        if (is_string($this->data)) {
+            $this->data = json_decode($this->data, true);
+        } else {
+            if (is_object($data)) {
+                $this->data = json_decode(json_encode($this->data), true);
+            }
+        }
     }
 
-    function& get(&$obj, $expr)
+    /**
+     * JsonEncoded version of the object
+     * @return string
+     */
+    public function toString()
     {
-        if ((($exprs = JsonStore::_normalizedFirst($obj, $expr)) !== false) &&
-            (is_array($exprs) || $exprs instanceof Traversable)) {
+        return json_encode($this->data);
+    }
+
+    /**
+     * Returns the given json string to object
+     * @return \stdClass
+     */
+    public function toObject()
+    {
+        return json_decode(json_encode($this->data));
+    }
+
+    /**
+     * Returns the given json string to array
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Gets elements matching the given JsonPath expression
+     * @param string $expr JsonPath expression
+     * @param bool $unique Gets unique results or not
+     * @return array
+     */
+    public function get($expr, $unique = false)
+    {
+        if ((($exprs = $this->normalizedFirst($expr)) !== false) &&
+            (is_array($exprs) || $exprs instanceof \Traversable)
+        ) {
             $values = array();
 
             foreach ($exprs as $expr) {
-                $o =& $obj;
-                $keys = preg_split("/([\"'])?\]\[([\"'])?/", preg_replace(array("/^\\$\[[\"']?/", "/[\"']?\]$/"), "", $expr));
+                $o =& $this->data;
+                $keys = preg_split(
+                    "/([\"'])?\]\[([\"'])?/",
+                    preg_replace(array("/^\\$\[[\"']?/", "/[\"']?\]$/"), "", $expr)
+                );
 
-                for ($i=0; $i<count($keys); $i++) {
+                for ($i = 0; $i < count($keys); $i++) {
                     $o =& $o[$keys[$i]];
                 }
 
-                $values[] = &$o;
+                $values[] = & $o;
             }
 
-            return $values;
+            return $unique ? array_unique($values) : $values;
         }
 
         return self::$emptyArray;
     }
 
-    function set(&$obj, $expr, $value)
+    /**
+     * Sets the value for all elements matching the given JsonPath expression
+     * @param string $expr JsonPath expression
+     * @param mixed $value Value to set
+     * @return bool returns true if success
+     */
+    function set($expr, $value)
     {
-        if ($res =& JsonStore::get($obj, $expr)) {
+        if ($res =& $this->get($expr)) {
             foreach ($res as &$r) {
                 $r = $value;
             }
 
-          return true;
+            return true;
         }
 
-      return false;
+        return false;
     }
 
-    function add(&$obj, $parentexpr, $value, $name="")
+    /**
+     * Adds one or more elements matching the given json path expression
+     * @param string $parentexpr JsonPath expression to the parent
+     * @param mixed $value Value to add
+     * @param string $name Key name
+     * @return bool returns true if success
+     */
+    public function add($parentexpr, $value, $name = "")
     {
-      if($parents =& JsonStore::get($obj, $parentexpr)) {
-        foreach ($parents as &$parent) {
-            $parent = is_array($parent) ? $parent : array();
+        if ($parents =& $this->get($parentexpr)) {
 
-            if ($name != "") {
-                $parent[$name] = $value;
-            } else {
-                $parent[] = $value;
+            foreach ($parents as &$parent) {
+                $parent = is_array($parent) ? $parent : array();
+
+                if ($name != "") {
+                    $parent[$name] = $value;
+                } else {
+                    $parent[] = $value;
+                }
             }
+
+            return true;
         }
 
-        return true;
-      }
-
-      return false;
+        return false;
     }
 
-    function remove(&$obj, $expr)
+    /**
+     * Removes all elements matching the given jsonpath expression
+     * @param string $expr JsonPath expression
+     * @return bool returns true if success
+     */
+    public function remove($expr)
     {
-        if ((($exprs = JsonStore::_normalizedFirst($obj, $expr)) !== false) &&
-             (is_array($exprs) || $exprs instanceof Traversable)) {
+        if ((($exprs = $this->normalizedFirst($expr)) !== false) &&
+            (is_array($exprs) || $exprs instanceof \Traversable)
+        ) {
             foreach ($exprs as &$expr) {
                 $o =& $obj;
-                $keys = preg_split("/([\"'])?\]\[([\"'])?/", preg_replace(array("/^\\$\[[\"']?/", "/[\"']?\]$/"), "", $expr));
-                for ($i=0; $i<count($keys)-1; $i++) {
+                $keys = preg_split(
+                    "/([\"'])?\]\[([\"'])?/",
+                    preg_replace(array("/^\\$\[[\"']?/", "/[\"']?\]$/"), "", $expr)
+                );
+                for ($i = 0; $i < count($keys) - 1; $i++) {
                     $o =& $o[$keys[$i]];
                 }
 
@@ -99,18 +185,22 @@ class JsonStore
         return false;
     }
 
-    function _normalizedFirst($o, $expr)
+    private function normalizedFirst($expr)
     {
         if ($expr == "") {
             return false;
-        } else if (preg_match("/^\$(\[([0-9*]+|'[-a-zA-Z0-9_ ]+')\])*$/", $expr)) {
-            print("normalized: " . $expr);
-            return $expr;
         } else {
-            $jsonPath = new JsonPath();
-            $res = $jsonPath->jsonPath($o, $expr, array("resultType" => "PATH"));
-            return $res;
+            if (preg_match("/^\$(\[([0-9*]+|'[-a-zA-Z0-9_ ]+')\])*$/", $expr)) {
+                print("normalized: " . $expr);
+
+                return $expr;
+            } else {
+                $res = $this->jsonPath->jsonPath($this->data, $expr, array("resultType" => "PATH"));
+
+                return $res;
+            }
         }
     }
 }
+
 ?>
