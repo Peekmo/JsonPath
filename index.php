@@ -15,7 +15,7 @@ $json = '{
                 "price": 8.95
             },
             { 
-                "category": "fiction",
+                "category": "01.02",
                 "author": "Evelyn Waugh",
                 "title": "Sword of Honour",
                 "price": 12.99
@@ -45,7 +45,7 @@ $json = '{
 $store = new JsonStore($json);
 
 // Returns an array with all categories from books which have an isbn attribute
-$x = $store->get("$..book.*.category");
+$x = $store->get("$..book[?(@[isbn])].category");
 
 echo json_encode($x);
 ?>

@@ -18,6 +18,7 @@ class JsonPath
     private $resultType = "Value";
     private $result = array();
     private $subx = array();
+    private $keywords = array('=', ')', '!', '<', '>');
 
     public function jsonPath($obj, $expr, $args = null)
     {
@@ -69,7 +70,42 @@ class JsonPath
      */
     private function tempFilters($filter)
     {
-        return "[#" . (array_push($this->result, $filter[1]) - 1) . "]";
+        $f = $filter[1];
+        $elements = explode('\'', $f);
+
+        // Hack to make "dot" works on filters
+        for ($i=0, $m=0; $i<count($elements); $i++) {
+            if ($m%2 == 0) {
+                if (substr($elements[$i-1], 0, -1) == '\\') {
+                    continue;
+                }
+
+                $e = explode('.', $elements[$i]);
+                $str = ''; $first = true;
+                foreach ($e as $substr) {
+                    if ($first) {
+                        $str = $substr;
+                        $first = false;
+                        continue;
+                    }
+
+                    $end = null;
+                    if (false !== $pos = $this->strpos_array($substr, $this->keywords)) {
+                        list($substr, $end) = array(substr($substr, 0, $pos), substr($substr, $pos, strlen($substr)));
+                    }
+
+                    $str .= '[' . $substr . ']';
+                    if (null !== $end) {
+                        $str .= $end;
+                    }
+                }
+                $elements[$i] = $str;
+            }
+
+            $m++;
+        }
+
+        return "[#" . (array_push($this->result, implode('\'', $elements)) - 1) . "]";
     }
 
     /**
@@ -217,6 +253,26 @@ class JsonPath
         }
 
         return $o;
+    }
+
+    /**
+     * Search one of the given needs in the array
+     * @param string $haystack
+     * @param array $needles
+     * @return bool|string
+     */
+    private function strpos_array($haystack, array $needles)
+    {
+        $closer = 10000;
+        foreach($needles as $needle) {
+            if (false !== $pos = strpos($haystack, $needle)) {
+                if ($pos < $closer) {
+                    $closer = $pos;
+                }
+            }
+        }
+
+        return 10000 === $closer ? false : $closer;
     }
 }
 
