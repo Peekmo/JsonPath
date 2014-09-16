@@ -104,7 +104,24 @@ class JsonStore
                 $values[] = & $o;
             }
 
-            return $unique ? array_unique($values) : $values;
+            if (true === $unique) {
+                if (!empty($values) && is_array($values[0])) {
+                    array_walk($values, function(&$value) {
+                        $value = json_encode($value);
+                    });
+
+                    $values = array_unique($values);
+                    array_walk($values, function(&$value) {
+                        $value = json_decode($value, true);
+                    });
+
+                    return array_values($values);
+                }
+
+                return array_unique($values);
+            }
+
+            return $values;
         }
 
         return self::$emptyArray;

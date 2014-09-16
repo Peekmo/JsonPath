@@ -27,6 +27,13 @@ $json = '{
                 "isbn": "0-553-21311-3",
                 "price": 8.99
             },
+            {
+                "category": "fiction",
+                "author": "Herman Melville",
+                "title": "Moby Dick",
+                "isbn": "0-553-21311-3",
+                "price": 8.99
+            },
             {   
                 "category": "fiction",
                 "author": "J. R. R. Tolkien",
@@ -44,9 +51,8 @@ $json = '{
 
 $store = new JsonStore($json);
 
-// Removes the attribute "category" from all books
-$store->remove("$..book.*.category");
+// Returns an array with all categories from books which have an isbn attribute
+$x = $store->get("$..book[?(@[isbn])]", true);
 
-echo $store->toString();
-
+echo json_encode($x);
 ?>

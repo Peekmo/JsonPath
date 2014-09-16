@@ -26,6 +26,8 @@ You just have to require the vendor/autoload.php (if not already) and add the fo
 
 ## How it works ? ##
 
+/!\ API Breaking Changes with new version !
+
 Consider this json :
 
     { 
@@ -81,6 +83,8 @@ Consider this json :
 
     // Returns an array with all categories from books which have an isbn attribute
     $res = $store->get("$..book[?(@.isbn)].category");
+    
+    $res = $store->get("$..book[?(@.isbn)].category", true); // You can set true to get only unique results
 
     ?>
 ```
