@@ -28,7 +28,8 @@ class JsonStoreTest extends \PHPUnit_Framework_TestCase
                         "category": "fiction",
                         "author": "Evelyn Waugh",
                         "title": "Sword of Honour",
-                        "price": 12.99
+                        "price": 12.99,
+                        "code": "01.02"
                     },
                     {
                         "category": "fiction",
@@ -84,5 +85,18 @@ class JsonStoreTest extends \PHPUnit_Framework_TestCase
 
         $data = $this->jsonStore->get("$..category", true);
         $this->assertEquals($data, $expected);
+    }
+
+    public function testGetAllByKeyFiltered()
+    {
+        $data = $this->jsonStore->get("$..book[(@.code=='02.01')].category");
+        $expected = ["fiction", "fiction"];
+        $this->assertEquals($data, $expected);
+    }
+
+    public function tearDown()
+    {
+        $this->jsonStore = null;
+        $this->json = null;
     }
 } 

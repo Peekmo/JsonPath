@@ -76,7 +76,7 @@ class JsonPath
         // Hack to make "dot" works on filters
         for ($i=0, $m=0; $i<count($elements); $i++) {
             if ($m%2 == 0) {
-                if (substr($elements[$i-1], 0, -1) == '\\') {
+                if ($i > 0 && substr($elements[$i-1], 0, 1) == '\\') {
                     continue;
                 }
 

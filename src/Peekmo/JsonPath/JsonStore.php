@@ -43,10 +43,10 @@ class JsonStore
 
         if (is_string($this->data)) {
             $this->data = json_decode($this->data, true);
-        } else {
-            if (is_object($data)) {
-                $this->data = json_decode(json_encode($this->data), true);
-            }
+        } else if (is_object($data)) {
+            $this->data = json_decode(json_encode($this->data), true);
+        } else if (!is_array($data)) {
+            throw new \InvalidArgumentException(sprintf('Invalid data type in JsonStore. Expected object, array or string, got %s', gettype($data)));
         }
     }
 
