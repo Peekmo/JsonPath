@@ -167,7 +167,7 @@ class JsonStore
             (is_array($exprs) || $exprs instanceof \Traversable)
         ) {
             foreach ($exprs as &$expr) {
-                $o =& $obj;
+                $o =& $this->data;
                 $keys = preg_split(
                     "/([\"'])?\]\[([\"'])?/",
                     preg_replace(array("/^\\$\[[\"']?/", "/[\"']?\]$/"), "", $expr)

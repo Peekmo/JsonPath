@@ -44,8 +44,9 @@ $json = '{
 
 $store = new JsonStore($json);
 
-// Returns an array with all categories from books which have an isbn attribute
-$x = $store->get("$..book[?(@[isbn])].category");
+// Removes the attribute "category" from all books
+$store->remove("$..book.*.category");
 
-echo json_encode($x);
+echo $store->toString();
+
 ?>

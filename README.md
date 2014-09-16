@@ -76,12 +76,11 @@ Consider this json :
     use Peekmo\JsonPath\JsonStore;
 
     $json = '...';
-    $o = json_decode($json, true);
 
-    $store = new JsonStore();
+    $store = new JsonStore($json);
 
     // Returns an array with all categories from books which have an isbn attribute
-    $res = $store->get($o, "$..book[?(@.isbn)].category");
+    $res = $store->get("$..book[?(@.isbn)].category");
 
     ?>
 ```
@@ -98,14 +97,13 @@ It returns an array, you can so use default [functions](http://php.net/manual/fr
     use Peekmo\JsonPath\JsonStore;
 
     $json = '...';
-    $o = json_decode($json, true);
 
-    $store = new JsonStore();
+    $store = new JsonStore($json);
 
     // Change the value of the first book's category
-    $store->set($o, "$..book[0].category", "superCategory");
+    $store->set("$..book[0].category", "superCategory");
 
-    echo json_encode($o);
+    echo $store->toString();
 
     ?>
 ```
@@ -122,14 +120,13 @@ The value is passed by reference, so, when you are using a set, your object "$o"
     use Peekmo\JsonPath\JsonStore;
 
     $json = '...';
-    $o = json_decode($json, true);
 
-    $store = new JsonStore();
+    $store = new JsonStore($json);
 
     // Add a new value in first book's array "key":"value"
-    $store->add($o, "$..book[0]", "value", "key");
+    $store->add("$..book[0]", "value", "key");
 
-    echo json_encode($o);
+    echo $store->toString();
 
     ?>
 ```
@@ -146,14 +143,13 @@ The parameter "key" is optional, a number will be set if you're not providing on
     use Peekmo\JsonPath\JsonStore;
 
     $json = '...';
-    $o = json_decode($json, true);
 
-    $store = new JsonStore();
+    $store = new JsonStore($json);
 
     // Removes the attribute "category" from all books
-    $store->remove($o, "$..book.*.category");
+    $store->remove("$..book.*.category");
 
-    echo json_encode($o);
+    echo $store->toString();
 
     ?>
 ```
