@@ -90,6 +90,7 @@ Consider this json :
 ```
 
 It returns an array, you can so use default [functions](http://php.net/manual/fr/ref.array.php) on the result (Have unique key for example)
+From 1.1.0, it returns an empty array if the node does not exists
 
 - You can change a value like this :
 
@@ -113,6 +114,7 @@ It returns an array, you can so use default [functions](http://php.net/manual/fr
 ```
 
 The value is passed by reference, so, when you are using a set, your object "$o" is modified.
+It returns a boolean to know if the node has been modified or not
 
 - You can add a value like this :
 
@@ -136,6 +138,7 @@ The value is passed by reference, so, when you are using a set, your object "$o"
 ```
 
 The parameter "key" is optional, a number will be set if you're not providing one.
+It returns a boolean to know if the node has been modified or not
 
 - You can remove an attribute like this :
 
