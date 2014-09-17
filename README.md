@@ -4,6 +4,8 @@ JsonPath
 
 JsonPath utility (XPath for JSON) for PHP based on **Stefan Goessner's** implementation : http://code.google.com/p/jsonpath/
 
+C php extension is in progress [here](https://github.com/Peekmo/php-ext-jsonpath), any help is welcome :)
+
 ## Documentation ##
 
 What is JsonPath ? What is the syntax ? Take a look to [Stefan Goessner's documentation](http://goessner.net/articles/JsonPath/)
@@ -164,4 +166,3 @@ It returns a boolean to know if the node has been modified or not
 ## Thanks ##
 
 - Special thanks to **Stefan Goessner** for his previous work
-- Thanks to [Raccourci Interactive](http://www.raccourci.fr/) who contribute to it.
