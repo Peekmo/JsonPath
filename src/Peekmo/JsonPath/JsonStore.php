@@ -135,7 +135,8 @@ class JsonStore
      */
     function set($expr, $value)
     {
-        if ($res =& $this->get($expr)) {
+        $get = $this->get($expr);
+        if ($res =& $get) {
             foreach ($res as &$r) {
                 $r = $value;
             }
@@ -155,7 +156,8 @@ class JsonStore
      */
     public function add($parentexpr, $value, $name = "")
     {
-        if ($parents =& $this->get($parentexpr)) {
+        $get = $this->get($parentexpr);
+        if ($parents =& $get) {
 
             foreach ($parents as &$parent) {
                 $parent = is_array($parent) ? $parent : array();
