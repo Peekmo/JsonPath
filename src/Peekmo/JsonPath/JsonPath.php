@@ -164,6 +164,9 @@ class JsonPath
                 $this->trace($this->evalx($loc, $val, substr($path, strrpos($path, ";") + 1)) . ";" . $x, $val, $path);
             }
             else if (preg_match("/^\?\(.*?\)$/", $loc)) { // [?(expr)]
+	            if ($this->evalx(preg_replace("/^\?\((.*?)\)$/", "$1", $loc), $val)) {
+		            $this->trace($x, $val, $path);
+	            }
                 $this->walk($loc, $x, $val, $path, array(&$this, "_callback_05"));
             }
             else if (preg_match("/^(-?[0-9]*):(-?[0-9]*):?(-?[0-9]*)$/", $loc)) { // [start:end:step]  phyton slice syntax

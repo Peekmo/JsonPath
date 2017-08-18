@@ -106,16 +106,13 @@ class JsonStore
 
             if (true === $unique) {
                 if (!empty($values) && is_array($values[0])) {
-                    array_walk($values, function(&$value) {
-                        $value = json_encode($value);
-                    });
-
-                    $values = array_unique($values);
-                    array_walk($values, function(&$value) {
-                        $value = json_decode($value, true);
-                    });
-
-                    return array_values($values);
+	                $tmpValues = array_map(function($value) {
+                        return json_encode($value);
+                    }, $values);
+	
+	                $tmpValues = array_unique($tmpValues);
+	                
+                    return array_values(array_intersect_key($values, $tmpValues));
                 }
 
                 return array_unique($values);
