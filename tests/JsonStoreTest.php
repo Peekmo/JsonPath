@@ -93,6 +93,23 @@ class JsonStoreTest extends \PHPUnit_Framework_TestCase
         $expected = ["fiction", "fiction"];
         $this->assertEquals($data, $expected);
     }
+	
+	public function testGetMaintainPath()
+    {
+		$jsonStore = new JsonStore('{"body":[{"name":"Peter Peterson","age":22,"gender":"Male"},{"name":"John Johnston","age":64}]}');
+        $data = $jsonStore->get("$.body[*]", false, true);
+        $expected = array( 'body|0' => array(
+							'name' => 'Peter Peterson',
+							'age' => 22,
+							'gender' => 'Male'
+						),
+						'body|1' => array (
+							'name' => 'John Johnston',
+							'age' => 64
+						));
+						
+        $this->assertEquals($data, $expected);
+    }
 
     public function tearDown()
     {

@@ -81,9 +81,10 @@ class JsonStore
      * Gets elements matching the given JsonPath expression
      * @param string $expr JsonPath expression
      * @param bool $unique Gets unique results or not
+	 * @param bool $keyFromPath ability to retain pathing in key separated by a |
      * @return array
      */
-    public function get($expr, $unique = false)
+	public function get($expr, $unique = false, $keyFromPath = false)
     {
         if ((($exprs = $this->normalizedFirst($expr)) !== false) &&
             (is_array($exprs) || $exprs instanceof \Traversable)
@@ -97,11 +98,23 @@ class JsonStore
                     preg_replace(array("/^\\$\[[\"']?/", "/[\"']?\]$/"), "", $expr)
                 );
 
+                $path = "";
                 for ($i = 0; $i < count($keys); $i++) {
+
+                    $path .= $keys[$i];
+                    if ($i < count($keys) - 1) {
+                        $path .= '|';
+                    }
+
                     $o =& $o[$keys[$i]];
                 }
 
-                $values[] = & $o;
+				if ($keyFromPath) {
+					$values[$path] = & $o;
+				}
+				else {
+					$values[] = & $o;
+				}
             }
 
             if (true === $unique) {
